@@ -18,6 +18,7 @@ namespace MvcPL.Controllers
         private readonly IPostService postService;
         private readonly ITagService tagService;
         private static readonly int itemsToLoad = 3;
+        private static readonly int wordsInDescription = 50;
 
         public HomeController(IKernel kernel)
         {
@@ -29,13 +30,13 @@ namespace MvcPL.Controllers
 
         public ActionResult Index(int pageNumber = 1)
         {
-            if (pageNumber <= 1) pageNumber = 1;
+            if (pageNumber < 1) pageNumber = 1;
             return View(pageNumber);
         }
 
         public PartialViewResult GetBlogs(int pageNumber = 1)
         {
-            if (pageNumber <= 1) pageNumber = 1;
+            if (pageNumber < 1) pageNumber = 1;
 
             var allBlogs = blogService.GetAll();
             var blogs = allBlogs.Skip((pageNumber - 1) * itemsToLoad).Take(itemsToLoad);
@@ -48,9 +49,10 @@ namespace MvcPL.Controllers
                 var post = postService.GetByBlog(blog.Id).LastOrDefault();
                 if (post != null)
                 {
-                    post.Content = post.Content.Split(' ').Take(50).Aggregate((x, y) => x + " " + y) + "...";
+                    post.Content = post.Content.Split(' ').Take(wordsInDescription).Aggregate((x, y) => x + " " + y) + "...";
                     mainModels.Add(new MainModel
                     {
+                        UserId = user.Id,
                         BlogId = blog.Id,
                         Title = blog.Title,
                         FirstName = user.FirstName,
@@ -86,11 +88,18 @@ namespace MvcPL.Controllers
             var model = new PostMainModel
             {
                 BlogId = blogId,
+                UserId = user.Id,
                 PageNumber = pageNumber,
                 BlogTitle = blog.Title,
                 FirstName = user.FirstName,
                 LastName = user.LastName
             };
+
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewBag.IsMyBlog = user.Email == User.Identity.Name;
+            }
+
             return View(model);
         }
 
@@ -149,7 +158,52 @@ namespace MvcPL.Controllers
                 Tags = tags
             };
 
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewBag.IsMyPost = user.Email == User.Identity.Name || IsInRoles();
+            }
+
             return View(model);
+        }
+
+        public PartialViewResult GetBlogsByUser(int userId, int pageNumber = 1)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+
+            var allBlogs = blogService.GetAll();
+            var blogs = allBlogs.Skip((pageNumber - 1) * itemsToLoad).Take(itemsToLoad);
+
+            var mainModels = new List<MainModel>();
+
+            foreach (var blog in blogs)
+            {
+                var user = userService.Get(blog.UserId);
+                var post = postService.GetByBlog(blog.Id).LastOrDefault();
+                if (post != null)
+                {
+                    post.Content = post.Content.Split(' ').Take(wordsInDescription).Aggregate((x, y) => x + " " + y) + "...";
+                    mainModels.Add(new MainModel
+                    {
+                        BlogId = blog.Id,
+                        Title = blog.Title,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        LastPost = post
+                    });
+                }
+            }
+
+            ViewBag.HasPrevius = pageNumber > 1;
+            ViewBag.HasNext = allBlogs.Count() > pageNumber * itemsToLoad;
+
+            var model = new BlogMainModel { MainModels = mainModels, PageNumber = pageNumber };
+
+            return PartialView("_GetBlogs", model);
+        }
+
+        private bool IsInRoles()
+        {
+            return User.IsInRole("Admin");
         }
     }
 }

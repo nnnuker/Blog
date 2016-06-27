@@ -7,6 +7,17 @@
 <h1 class="blog-title">@Model.Title</h1>
 <p class="lead blog-description">by @Model.FirstName @Model.LastName</p>
 
+@if (User.Identity.IsAuthenticated && ViewBag.IsMyPost)
+{
+    using (Html.BeginForm("DeletePost", "Blog", new { id = Model.PostId }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ActionLink("Edit", "EditPost", "Blog", new { id = Model.PostId },
+                                    new { @class = "btn btn-xs btn-warning" })
+        <button type="submit" class="btn btn-xs btn-danger">Delete</button>
+    }
+}
+
 <div class="blog-post">
     <p>@Model.Content</p>
     @if (Model.Tags.Count() != 0)

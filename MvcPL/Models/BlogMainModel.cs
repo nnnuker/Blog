@@ -11,6 +11,7 @@ namespace MvcPL.Models
 
     public class MainModel
     {
+        public int UserId { get; set; }
         public int BlogId { get; set; }
         public string Title { get; set; }
         public string FirstName { get; set; }

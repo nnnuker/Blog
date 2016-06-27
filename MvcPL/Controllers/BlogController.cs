@@ -39,13 +39,8 @@ namespace MvcPL.Controllers
             if (!ModelState.IsValid) return View(model);
 
             var blogs = blogService.Get(model.Title);
-            var userId = userService.Get(User.Identity.Name).Id;
 
-            if (blogs.Count(x => x.UserId == userId && x.Title == model.Title) != 0)
-            {
-                ModelState.AddModelError("", "Blog with the same name is already exist.");
-                return View(model);
-            }
+            var userId = userService.Get(User.Identity.Name).Id;
 
             blogService.Create(new BllBlog
             {
@@ -53,18 +48,15 @@ namespace MvcPL.Controllers
                 UserId = userId
             });
 
-            var blogId = blogService.GetByUser(userId).Last().Id;
+            var thisBlogId = blogService.GetByUser(userId).Last().Id;
 
-            return RedirectToAction("EditBlog", new {id = blogId});
+            return RedirectToAction("GetBlogPosts", "Home", new { blogId = thisBlogId});
         }
 
         public ActionResult EditBlog(int id)
         {
             TempData["BlogId"] = id;
-            ViewBag.BlogTitle = blogService.Get(id).Title;
-            var model = postService.GetByBlog(id);
-            model = model.Reverse();
-            return View(model);
+            return PartialView();
         }
 
         [ValidateAntiForgeryToken]
@@ -80,7 +72,7 @@ namespace MvcPL.Controllers
             var post = postService.Get(id);
             postService.Delete(post);
 
-            return RedirectToAction("EditBlog", new { id = post.BlogId});
+            return RedirectToAction("PostsIndex", "Home", new { blogId = post.BlogId});
         }
 
         public ActionResult EditPost(int id)
@@ -117,12 +109,7 @@ namespace MvcPL.Controllers
                 postService.Update(post.ToPost());
                 tagService.Update(post.ToTags(), post.Id);
             }
-            return RedirectToAction("EditBlog", new {id = val ?? 0});
+            return RedirectToAction("GetPost", "Home", new { postId = post.Id});
         }
-
-        //public ActionResult GetUserBlogs(int userId)
-        //{
-        //    return View();
-        //}
     }
 }

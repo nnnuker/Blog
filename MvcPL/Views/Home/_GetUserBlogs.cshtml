@@ -16,9 +16,9 @@
             @foreach (var blog in Model)
             {
                 <tr>
-                    <td>@Html.ActionLink(blog.Title, "EditBlog", "Blog", new {id = blog.Id}, null)</td>
+                    <td>@Html.ActionLink(blog.Title, "PostsIndex", "Home", new {blogId = blog.Id}, null)</td>
                     <td>
-                        @using (Html.BeginForm("Delete", "Blog", new { id = blog.Id }))
+                        @using (Html.BeginForm("Delete", "Blog", new { blogId = blog.Id }))
                         {
                             @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-xs btn-danger">Delete</button>

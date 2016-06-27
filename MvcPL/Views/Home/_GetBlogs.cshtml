@@ -3,14 +3,56 @@
 @foreach (var blog in Model.MainModels)
 {
     <div class="blog-post">
-        <h2 class="blog-post-title">@Html.ActionLink(blog.Title, "PostsIndex", "Home", new {blogId = blog.BlogId, pageNumber = 1 }, null)</h2>
+        <h2 class="blog-post-title">
+            @Html.ActionLink(blog.Title, "PostsIndex", "Home", new {blogId = blog.BlogId, pageNumber = 1}, null)
+        </h2>
         <p class="blog-post-meta">
-            by <a href="#">@blog.FirstName @blog.LastName</a>
+            by @Html.ActionLink(blog.FirstName + " " + blog.LastName, "GetBlogsByUser", "Home", 
+              new { userId = blog.UserId, pageNumber = 1 }, null)
         </p>
         <p>
             @blog.LastPost.Content
         </p>
-        
-        @Html.ActionLink("Read more", "GetUserBlogs", "Home", new { blogId = blog.BlogId, pageNumber = 1 }, null)
+
+        @Html.ActionLink("Read more", "PostsIndex", "Home", new { blogId = blog.BlogId, pageNumber = 1 }, null)
     </div>
 }
+
+<nav>
+    <ul class="pager">
+        <li>
+            @if (ViewBag.HasPrevius)
+            {
+                @Ajax.ActionLink("Previus", "Index", new { pageNumber = Model.PageNumber - 1 }, new AjaxOptions
+           {
+               UpdateTargetId = "blogs",
+               LoadingElementId = "loading",
+               LoadingElementDuration = 1000,
+               Url = Url.Action("GetBlogs", new { pageNumber = Model.PageNumber - 1 })
+           })
+            }
+            else
+            {
+                <a>Previus</a>
+            }
+
+        </li>
+
+        <li>
+            @if (ViewBag.HasNext)
+            {
+                @Ajax.ActionLink("Next", "Index", new { pageNumber = Model.PageNumber + 1 }, new AjaxOptions
+           {
+               UpdateTargetId = "blogs",
+               LoadingElementId = "loading",
+               LoadingElementDuration = 1000,
+               Url = Url.Action("GetBlogs", new { pageNumber = Model.PageNumber + 1 })
+           })
+            }
+            else
+            {
+                <a>Next</a>
+            }
+        </li>
+    </ul>
+</nav>

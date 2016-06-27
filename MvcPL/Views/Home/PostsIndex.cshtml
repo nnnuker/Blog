@@ -5,33 +5,20 @@
 }
 
 <h1 class="blog-title">@Model.BlogTitle</h1>
-<p class="lead blog-description">by @Model.FirstName @Model.LastName</p>
+<p class="lead blog-description">
+    by @Html.ActionLink(Model.FirstName + " " + Model.LastName, "GetBlogsByUser", "Home", null, new {userId = Model.UserId})
+</p>
+
+@if (User.Identity.IsAuthenticated && ViewBag.IsMyBlog)
+{
+    <div>
+        @Html.Action("EditBlog", "Blog", new {id = Model.BlogId})
+    </div>
+}
+
 <div id="loading" class="load" style="display: none">
     <p>Loading...</p>
 </div>
-<div id="blogs">@Html.Action("GetBlogPosts", new { blogId = Model.BlogId, pageNumber = Model.PageNumber })</div>
-<nav>
-    <ul class="pager">
-        <li>
-            @Ajax.ActionLink("Previus", "PostsIndex", new { blogId = Model.BlogId, pageNumber = Model.PageNumber - 1 },
-           new AjaxOptions
-           {
-               UpdateTargetId = "blogs",
-               LoadingElementId = "loading",
-               LoadingElementDuration = 1000,
-               Url = Url.Action("GetBlogPosts", new { blogId = Model.BlogId, pageNumber = Model.PageNumber - 1 })
-           })
-        </li>
-
-        <li>
-            @Ajax.ActionLink("Next", "PostsIndex", new { blogId = Model.BlogId, pageNumber = Model.PageNumber + 1 },
-           new AjaxOptions
-           {
-               UpdateTargetId = "blogs",
-               LoadingElementId = "loading",
-               LoadingElementDuration = 1000,
-               Url = Url.Action("GetBlogPosts", new { blogId = Model.BlogId, pageNumber = Model.PageNumber + 1 })
-           })
-        </li>
-    </ul>
-</nav>
+<div id="blogs">
+    @Html.Action("GetBlogPosts", new { blogId = Model.BlogId, pageNumber = Model.PageNumber })
+</div>

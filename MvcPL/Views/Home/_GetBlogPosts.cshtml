@@ -4,7 +4,7 @@
 {
     <div class="blog-post">
         <h2 class="blog-post-title">
-            @Html.ActionLink(post.Title, "GetPost", "Home", new {postId = post.PostId}, null)
+            @Html.ActionLink(post.Title, "GetPost", "Home", new { postId = post.PostId }, null)
         </h2>
         <p>@post.Content</p>
         @if (post.Tags.Count() != 0)
@@ -16,7 +16,47 @@
                 }
             </p>
         }
-        
+
         @Html.ActionLink("Read more", "GetPost", "Home", new { postId = post.PostId }, null)
     </div>
 }
+
+<nav>
+    <ul class="pager">
+        <li>
+            @if (ViewBag.HasPrevius)
+            {
+                @Ajax.ActionLink("Previus", "PostsIndex", new { blogId = Model.BlogId, pageNumber = Model.PageNumber - 1 },
+                new AjaxOptions
+                {
+                    UpdateTargetId = "blogs",
+                    LoadingElementId = "loading",
+                    LoadingElementDuration = 1000,
+                    Url = Url.Action("GetBlogPosts", new { blogId = Model.BlogId, pageNumber = Model.PageNumber - 1 })
+                })
+            }
+            else
+            {
+                <a>Previus</a>
+            }
+        </li>
+
+        <li>
+            @if (ViewBag.HasNext)
+            {
+                @Ajax.ActionLink("Next", "PostsIndex", new { blogId = Model.BlogId, pageNumber = Model.PageNumber + 1 },
+                new AjaxOptions
+                {
+                    UpdateTargetId = "blogs",
+                    LoadingElementId = "loading",
+                    LoadingElementDuration = 1000,
+                    Url = Url.Action("GetBlogPosts", new { blogId = Model.BlogId, pageNumber = Model.PageNumber + 1 })
+                })
+            }
+            else
+            {
+                <a>Next</a>
+            }
+        </li>
+    </ul>
+</nav>
