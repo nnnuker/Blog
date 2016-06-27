@@ -12,7 +12,7 @@ namespace MvcPL.Infrastructure.Mappers
         {
             string tags = post.Tags ?? "";
 
-            var matches = Regex.Matches(tags, @"#{1,1}[\w]+[\s]*");
+            var matches = Regex.Matches(tags, @"#{1,1}[\w]+");
 
             var bllTags = new List<BllTag>();
 
@@ -37,7 +37,8 @@ namespace MvcPL.Infrastructure.Mappers
 
         public static EditPostModel ToEditPost(this BllPost post, IEnumerable<BllTag> tags)
         {
-            string tagsConcat = tags.Aggregate("", (current, tag) => current + " " + tag.Name);
+            var stringTags = tags.Select(x => x.Name);
+            string tagsConcat = stringTags.Aggregate((current, tag) => current + " " + tag);
             return new EditPostModel
             {
                 BlogId = post.BlogId,

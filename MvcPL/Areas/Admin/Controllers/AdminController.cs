@@ -18,7 +18,7 @@ namespace MvcPL.Areas.Admin.Controllers
     {
         private readonly IUserService userService;
         private readonly IService<BllRole> roleService;
-        private static readonly int loadedItems = 20;
+        private static readonly int loadedItems = 3;
 
         public AdminController(IKernel kernel)
         {
