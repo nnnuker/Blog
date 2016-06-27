@@ -1,0 +1,26 @@
+﻿@model MvcPL.Models.PostViewModel
+
+@{
+    ViewBag.Title = Model.Title;
+}
+
+<h1 class="blog-title">@Model.Title</h1>
+<p class="lead blog-description">by @Model.FirstName @Model.LastName</p>
+
+<div class="blog-post">
+    <p>@Model.Content</p>
+    @if (Model.Tags.Count() != 0)
+    {
+        <p>
+            Tags: @foreach (var tag in Model.Tags)
+                  {
+                      @Html.ActionLink(tag.Name, "", "", new {id = Model.PostId}, null)
+                  }
+        </p>
+    }
+</div>
+
+
+
+
+

@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="blog-masthead">
+        <div class="container">
+            <div class="blog-nav">
+                @Html.ActionLink("Home", "Index", new { area = "", controller = "Home" },
+               new { @class = "blog-nav-item" })
+                @if (Request.IsAuthenticated)
+                {
+                    if (User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Admin panel", "Index", new { area = "Admin", controller = "Admin" },
+                       new { @class = "blog-nav-item" })
+                    }
+                    @Html.ActionLink(Context.User.Identity.Name, "EditBlogs", new { area = "", controller = "Blog" },
+                   new { @class = "blog-nav-item" })
+                    @Html.ActionLink("Logoff", "Logoff", new { area = "", controller = "Account" },
+                   new { @class = "blog-nav-item" })
+                }
+                else
+                {
+                    @Html.ActionLink("Login", "Login", new { area = "", controller = "Account" },
+                   new { @class = "blog-nav-item" })
+                    @Html.ActionLink("Register", "Register", new { area = "", controller = "Account" },
+                   new { @class = "blog-nav-item" })
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 blog-main">
+                @RenderBody()
+            </div>
+            <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+                @Html.Action("GetUserBlogs", new { controller = "Home", area = "" })
+            </div>
+        </div>
+    </div>
+
+    <footer class="blog-footer">
+        <p>&copy; @DateTime.Now.Year - Blog ASP.NET Application</p>
+        <p><a href="#">Back to top</a></p>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

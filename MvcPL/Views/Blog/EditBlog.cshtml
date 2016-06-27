@@ -1,0 +1,33 @@
+﻿@model IEnumerable<BLL.Entities.BllPost>
+
+@{
+    ViewBag.Title = "Edit blog";
+}
+
+<div class="jumbotron">
+    <p class="lead">Create new post.</p>
+    <p>
+        @Html.ActionLink("Create new post", "CreatePost", "Blog", null, new { @class = "btn btn-primary btn-lg" })
+    </p>
+</div>
+    
+    @*@foreach (var post in Model)
+    {
+        <div class="blog-post">
+            <h2 class="blog-post-title">@Html.ActionLink(blog.Title, "EditBlog", "Blog", new { id = blog.BlogId }, null)</h2>
+            <p class="blog-post-meta">
+                by <a href="#">@blog.FirstName @blog.LastName</a>
+            </p>
+        </div>
+        <tr>
+            <td>@post.Title</td>
+            <td>
+                @using (Html.BeginForm("DeletePost", "Blog", new { id = post.Id }))
+                {
+                    @Html.ActionLink("Edit", "EditPost", new { id = post.Id }, new { @class = "btn btn-xs btn-warning" })
+                    <button type="submit" class="btn btn-xs btn-danger">Delete</button>
+                }
+            </td>
+        </tr>
+    }
+</table>*@

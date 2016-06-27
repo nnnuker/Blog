@@ -1,0 +1,37 @@
+﻿@model MvcPL.Models.PostMainModel
+
+@{
+    ViewBag.Title = Model.BlogTitle;
+}
+
+<h1 class="blog-title">@Model.BlogTitle</h1>
+<p class="lead blog-description">by @Model.FirstName @Model.LastName</p>
+<div id="loading" class="load" style="display: none">
+    <p>Loading...</p>
+</div>
+<div id="blogs">@Html.Action("GetBlogPosts", new { blogId = Model.BlogId, pageNumber = Model.PageNumber })</div>
+<nav>
+    <ul class="pager">
+        <li>
+            @Ajax.ActionLink("Previus", "PostsIndex", new { blogId = Model.BlogId, pageNumber = Model.PageNumber - 1 },
+           new AjaxOptions
+           {
+               UpdateTargetId = "blogs",
+               LoadingElementId = "loading",
+               LoadingElementDuration = 1000,
+               Url = Url.Action("GetBlogPosts", new { blogId = Model.BlogId, pageNumber = Model.PageNumber - 1 })
+           })
+        </li>
+
+        <li>
+            @Ajax.ActionLink("Next", "PostsIndex", new { blogId = Model.BlogId, pageNumber = Model.PageNumber + 1 },
+           new AjaxOptions
+           {
+               UpdateTargetId = "blogs",
+               LoadingElementId = "loading",
+               LoadingElementDuration = 1000,
+               Url = Url.Action("GetBlogPosts", new { blogId = Model.BlogId, pageNumber = Model.PageNumber + 1 })
+           })
+        </li>
+    </ul>
+</nav>

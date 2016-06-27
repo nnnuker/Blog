@@ -1,0 +1,16 @@
+﻿@model MvcPL.Models.BlogMainModel
+
+@foreach (var blog in Model.MainModels)
+{
+    <div class="blog-post">
+        <h2 class="blog-post-title">@Html.ActionLink(blog.Title, "PostsIndex", "Home", new {blogId = blog.BlogId, pageNumber = 1 }, null)</h2>
+        <p class="blog-post-meta">
+            by <a href="#">@blog.FirstName @blog.LastName</a>
+        </p>
+        <p>
+            @blog.LastPost.Content
+        </p>
+        
+        @Html.ActionLink("Read more", "GetUserBlogs", "Home", new { blogId = blog.BlogId, pageNumber = 1 }, null)
+    </div>
+}

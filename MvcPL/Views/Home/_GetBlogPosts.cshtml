@@ -1,0 +1,22 @@
+﻿@model MvcPL.Models.PostMainModel
+
+@foreach (var post in Model.MainModels)
+{
+    <div class="blog-post">
+        <h2 class="blog-post-title">
+            @Html.ActionLink(post.Title, "GetPost", "Home", new {postId = post.PostId}, null)
+        </h2>
+        <p>@post.Content</p>
+        @if (post.Tags.Count() != 0)
+        {
+            <p>
+                Tags: @foreach (var tag in post.Tags)
+                {
+                    @Html.ActionLink(tag.Name, "", "", null, null)
+                }
+            </p>
+        }
+        
+        @Html.ActionLink("Read more", "GetPost", "Home", new { postId = post.PostId }, null)
+    </div>
+}

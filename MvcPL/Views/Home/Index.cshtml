@@ -1,0 +1,33 @@
+﻿@model int
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div id="loading" class="load" style="display: none">
+    <p>Loading...</p>
+</div>
+<div id="blogs">@Html.Action("GetBlogs", new { pageNumber = Model })</div>
+<nav>
+    <ul class="pager">
+        <li>
+            @Ajax.ActionLink("Previus", "Index", new { pageNumber = Model - 1 }, new AjaxOptions
+               {
+                   UpdateTargetId = "blogs",
+                   LoadingElementId = "loading",
+                   LoadingElementDuration = 1000,
+                   Url = Url.Action("GetBlogs", new { pageNumber = Model - 1 })
+               })
+    </li>
+
+    <li>
+        @Ajax.ActionLink("Next", "Index", new { pageNumber = Model + 1 }, new AjaxOptions
+               {
+                   UpdateTargetId = "blogs",
+                   LoadingElementId = "loading",
+                   LoadingElementDuration = 1000,
+                   Url = Url.Action("GetBlogs", new { pageNumber = Model + 1 })
+               })
+</li>
+</ul>
+</nav>

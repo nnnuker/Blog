@@ -1,0 +1,31 @@
+﻿@model IEnumerable<BLL.Entities.BllBlog>
+
+<div class="sidebar-module sidebar-module-inset">
+    @Html.ActionLink("Create new blog", "CreateBlog", "Blog", null, null)
+</div>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="sidebar-module">
+        <h4>Your blogs</h4>
+        <table class="table">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Title)</th>
+                <th></th>
+            </tr>
+            @foreach (var blog in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink(blog.Title, "EditBlog", "Blog", new {id = blog.Id}, null)</td>
+                    <td>
+                        @using (Html.BeginForm("Delete", "Blog", new { id = blog.Id }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-xs btn-danger">Delete</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+}
