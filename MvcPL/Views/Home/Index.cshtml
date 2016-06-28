@@ -1,4 +1,4 @@
-﻿@model int
+﻿@model object
 
 @{
     ViewBag.Title = "Home";
@@ -8,5 +8,5 @@
     <p>Loading...</p>
 </div>
 <div id="blogs">
-    @Html.Action("GetBlogs", new { pageNumber = Model })
+    @Html.Action((string)ViewBag.Action, Model)
 </div>

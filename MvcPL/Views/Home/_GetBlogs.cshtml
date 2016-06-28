@@ -4,10 +4,10 @@
 {
     <div class="blog-post">
         <h2 class="blog-post-title">
-            @Html.ActionLink(blog.Title, "PostsIndex", "Home", new {blogId = blog.BlogId, pageNumber = 1}, null)
+            @Html.ActionLink(blog.Title, "PostsIndex", "Home", new { blogId = blog.BlogId, pageNumber = 1 }, null)
         </h2>
         <p class="blog-post-meta">
-            by @Html.ActionLink(blog.FirstName + " " + blog.LastName, "GetBlogsByUser", "Home", 
+            by @Html.ActionLink(blog.FirstName + " " + blog.LastName, "IndexUserBlogs", "Home",
               new { userId = blog.UserId, pageNumber = 1 }, null)
         </p>
         <p>
@@ -23,12 +23,12 @@
         <li>
             @if (ViewBag.HasPrevius)
             {
-                @Ajax.ActionLink("Previus", "Index", new { pageNumber = Model.PageNumber - 1 }, new AjaxOptions
+                @Ajax.ActionLink("Previus", (string)ViewBag.ActionLink, new { pageNumber = Model.PageNumber - 1 }, new AjaxOptions
            {
                UpdateTargetId = "blogs",
                LoadingElementId = "loading",
                LoadingElementDuration = 1000,
-               Url = Url.Action("GetBlogs", new { pageNumber = Model.PageNumber - 1 })
+               Url = Url.Action((string)ViewBag.AjaxLink, new { pageNumber = Model.PageNumber - 1 })
            })
             }
             else
@@ -41,12 +41,12 @@
         <li>
             @if (ViewBag.HasNext)
             {
-                @Ajax.ActionLink("Next", "Index", new { pageNumber = Model.PageNumber + 1 }, new AjaxOptions
+                @Ajax.ActionLink("Next", (string)ViewBag.ActionLink, new { pageNumber = Model.PageNumber + 1 }, new AjaxOptions
            {
                UpdateTargetId = "blogs",
                LoadingElementId = "loading",
                LoadingElementDuration = 1000,
-               Url = Url.Action("GetBlogs", new { pageNumber = Model.PageNumber + 1 })
+               Url = Url.Action((string)ViewBag.AjaxLink, new { pageNumber = Model.PageNumber + 1 })
            })
             }
             else

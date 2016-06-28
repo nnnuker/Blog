@@ -31,7 +31,8 @@ namespace MvcPL.Controllers
         public ActionResult Index(int pageNumber = 1)
         {
             if (pageNumber < 1) pageNumber = 1;
-            return View(pageNumber);
+            ViewBag.Action = "GetBlogs";
+            return View(new { pageNumber });
         }
 
         public PartialViewResult GetBlogs(int pageNumber = 1)
@@ -39,33 +40,11 @@ namespace MvcPL.Controllers
             if (pageNumber < 1) pageNumber = 1;
 
             var allBlogs = blogService.GetAll();
-            var blogs = allBlogs.Skip((pageNumber - 1) * itemsToLoad).Take(itemsToLoad);
 
-            var mainModels = new List<MainModel>();
+            var model = GetBlogMainModel(pageNumber, allBlogs);
 
-            foreach (var blog in blogs)
-            {
-                var user = userService.Get(blog.UserId);
-                var post = postService.GetByBlog(blog.Id).LastOrDefault();
-                if (post != null)
-                {
-                    post.Content = post.Content.Split(' ').Take(wordsInDescription).Aggregate((x, y) => x + " " + y) + "...";
-                    mainModels.Add(new MainModel
-                    {
-                        UserId = user.Id,
-                        BlogId = blog.Id,
-                        Title = blog.Title,
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
-                        LastPost = post
-                    });
-                }
-            }
-
-            ViewBag.HasPrevius = pageNumber > 1;
-            ViewBag.HasNext = allBlogs.Count() > pageNumber * itemsToLoad;
-
-            var model = new BlogMainModel { MainModels = mainModels, PageNumber = pageNumber };
+            ViewBag.AjaxLink = "GetBlogs";
+            ViewBag.ActionLink = "Index";
 
             return PartialView("_GetBlogs", model);
         }
@@ -166,11 +145,34 @@ namespace MvcPL.Controllers
             return View(model);
         }
 
+        public ActionResult IndexUserBlogs(int userId, int pageNumber = 1)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            ViewBag.Action = "GetBlogsByUser";
+            return View("Index", new {userId, pageNumber});
+        }
+
         public PartialViewResult GetBlogsByUser(int userId, int pageNumber = 1)
         {
             if (pageNumber < 1) pageNumber = 1;
 
-            var allBlogs = blogService.GetAll();
+            var allBlogs = blogService.GetByUser(userId);
+
+            var model = GetBlogMainModel(pageNumber, allBlogs);
+
+            ViewBag.AjaxLink = "GetBlogsByUser";
+            ViewBag.ActionLink = "IndexUserBlogs";
+
+            return PartialView("_GetBlogs", model);
+        }
+
+        private bool IsInRoles()
+        {
+            return User.IsInRole("Admin");
+        }
+
+        private BlogMainModel GetBlogMainModel(int pageNumber, IEnumerable<BllBlog> allBlogs)
+        {
             var blogs = allBlogs.Skip((pageNumber - 1) * itemsToLoad).Take(itemsToLoad);
 
             var mainModels = new List<MainModel>();
@@ -184,6 +186,7 @@ namespace MvcPL.Controllers
                     post.Content = post.Content.Split(' ').Take(wordsInDescription).Aggregate((x, y) => x + " " + y) + "...";
                     mainModels.Add(new MainModel
                     {
+                        UserId = user.Id,
                         BlogId = blog.Id,
                         Title = blog.Title,
                         FirstName = user.FirstName,
@@ -196,14 +199,7 @@ namespace MvcPL.Controllers
             ViewBag.HasPrevius = pageNumber > 1;
             ViewBag.HasNext = allBlogs.Count() > pageNumber * itemsToLoad;
 
-            var model = new BlogMainModel { MainModels = mainModels, PageNumber = pageNumber };
-
-            return PartialView("_GetBlogs", model);
-        }
-
-        private bool IsInRoles()
-        {
-            return User.IsInRole("Admin");
+            return new BlogMainModel { MainModels = mainModels, PageNumber = pageNumber };
         }
     }
 }
