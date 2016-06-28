@@ -29,7 +29,7 @@
                 {
                     <tr>
                         <td style="text-align: center">@user.Id</td>
-                        <td>@user.Email</td>
+                        <td>@Html.ActionLink(user.Email, "IndexUserBlogs", new {area="", controller="Home", userId = user.Id, pageNumber = 1},null)</td>
                         <td>@user.Role</td>
                         <td>
                             @using (Html.BeginForm("DeleteUser", "Admin", new {id = user.Id}))
@@ -60,7 +60,7 @@
                 }
                 else
                 {
-                    <a href="#">Previus</a>
+                    <a>Previus</a>
                 }
             </li>
 
@@ -78,7 +78,7 @@
                 }
                 else
                 {
-                    <a href="#">Next</a>
+                    <a>Next</a>
                 }
             </li>
         </ul>
