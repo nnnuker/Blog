@@ -1,0 +1,51 @@
+﻿@model string
+
+@{
+    ViewBag.Title = "Search";
+}
+
+@using (Ajax.BeginForm("Search", null, new AjaxOptions
+{
+    Url = Url.Action("GetResults", "Search"),
+    InsertionMode = InsertionMode.Replace,
+    OnSuccess = "onSuccess",
+    LoadingElementId = "loading",
+    LoadingElementDuration = 1000
+}, new { @class = "form-horizontal" }))
+{
+    <div class="form-group">
+        @Html.TextBox("query", null, new { @class = "form-control" })
+    </div>
+    <button type="submit" class="btn btn-xs btn-success" style="margin-bottom: 10px">Search</button>
+}
+
+<div id="loading" class="load" style="display: none">
+    <p>Loading...</p>
+</div>
+<div id="searchResults">
+    @Html.Action("GetResults", new { query = Model })
+</div>
+
+<script type="text/javascript">
+    function onSuccess(data) {
+        var target = $("#searchResults");
+        target.empty();
+        for (var i = 0; i < data.length; i++) {
+            var post = data[i];
+            target.append(
+                '<div class="blog-post"><h2 class="blog-post-title">' +
+        '<a href="/Home/GetPost?postId=' + post.PostId + '">' + post.Title + '</a></h2><p class="blog-post-meta">' +
+           'by <a href="/Home/IndexUserBlogs?userId=' + post.UserId + '">' + post.FirstName + ' ' + post.LastName + '</a></p>' +
+                      '<p>' + post.Content + '</p>' +
+            '<p><div id="id' + post.PostId + '"></div></p>' +
+            '<a href="/Home/GetPost?postId=31">Read more</a></div>'
+        );
+            var targetTags = $('#id' + post.PostId);
+            for (var j = 0; j < post.Tags.length; j++) {
+                var tag = post.Tags[j];
+                var name = tag.Name.substring(1);
+                targetTags.append('<a href="/Search/Search?query=%23' + name + '">' + tag.Name + '</a>');
+            }
+        }
+    }
+</script>

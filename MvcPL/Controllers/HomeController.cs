@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using BLL.Entities;
 using BLL.Interfaces;
+using MvcPL.Infrastructure.Helpers;
 using MvcPL.Infrastructure.Mappers;
 using MvcPL.Models;
 using Ninject;
@@ -92,7 +93,7 @@ namespace MvcPL.Controllers
             foreach (var post in posts)
             {
                 var tags = tagService.GetByPost(post.Id);
-                mainModels.Add(new PostModel(post, tags, wordsInDescription, GetDescription));
+                mainModels.Add(new PostModel(post, tags, wordsInDescription, Description.GetDescription));
             }
 
             var model = new PostMainModel(pageNumber, mainModels, user, blog);
@@ -178,7 +179,7 @@ namespace MvcPL.Controllers
                 var post = postService.GetByBlog(blog.Id).LastOrDefault();
                 if (post != null)
                 {
-                    post.Content = GetDescription(wordsInDescription, post.Content);
+                    post.Content = Description.GetDescription(wordsInDescription, post.Content);
                     mainModels.Add(new MainModel(user, blog, post));
                 }
             }
@@ -188,12 +189,6 @@ namespace MvcPL.Controllers
 
             return new BlogMainModel {MainModels = mainModels, PageNumber = pageNumber};
         }
-
-        private string GetDescription(int wordsInDescription, string str)
-        {
-            return str.Split(' ').Take(wordsInDescription).Aggregate((x, y) => x + " " + y) + "...";
-        }
-
         #endregion
     }
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using BLL.Entities;
+using BLL.Services;
 using MvcPL.Models;
 
 namespace MvcPL.Infrastructure.Mappers
@@ -12,7 +13,7 @@ namespace MvcPL.Infrastructure.Mappers
         {
             string tags = post.Tags ?? "";
 
-            var matches = Regex.Matches(tags, @"#{1,1}[\w]+");
+            var matches = TagService.GetTagMatches(tags);
 
             var bllTags = new List<BllTag>();
 

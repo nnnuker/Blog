@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using BLL.Entities;
 using BLL.Interfaces;
 using DAL.DTO;
@@ -56,9 +57,9 @@ namespace BLL.Services
             unitOfWork.Commit();
         }
 
-        public BllTag Get(string tag)
+        public IEnumerable<BllTag> Get(string tag)
         {
-            return repository.Get(t => t.Name == tag).FirstOrDefault().ToBll();
+            return repository.Get(t => t.Name.Contains(tag)).Select(x => x.ToBll());
         }
 
         public IEnumerable<BllTag> GetByPost(int postId)
@@ -87,6 +88,11 @@ namespace BLL.Services
             {
                 Create(tag);
             }
+        }
+
+        public static MatchCollection GetTagMatches(string tag)
+        {
+            return Regex.Matches(tag, @"#{1,1}[\w]+");
         }
     }
 }

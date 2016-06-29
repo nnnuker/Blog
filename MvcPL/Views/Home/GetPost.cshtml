@@ -26,7 +26,7 @@
         <p>
             Tags: @foreach (var tag in Model.Tags)
             {
-                @Html.ActionLink(tag.Name, "", "", new { id = Model.PostId }, null)
+                @Html.ActionLink(tag.Name, "Search", "Search", new { query = tag.Name }, null)
             }
         </p>
     }

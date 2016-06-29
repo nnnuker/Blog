@@ -47,6 +47,7 @@
     <Compile Include="Entities\BllUser.cs" />
     <Compile Include="Entities\BllComment.cs" />
     <Compile Include="Entities\IBllEntity.cs" />
+    <Compile Include="EqualityComparer.cs" />
     <Compile Include="Interfaces\ICommentService.cs" />
     <Compile Include="Interfaces\IPostService.cs" />
     <Compile Include="Interfaces\IService.cs" />

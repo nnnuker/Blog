@@ -12,7 +12,7 @@
             <p>
                 Tags: @foreach (var tag in post.Tags)
                 {
-                    @Html.ActionLink(tag.Name, "", "", null, null)
+                    @Html.ActionLink(tag.Name, "Search", "Search", new { query = tag.Name }, null)
                 }
             </p>
         }

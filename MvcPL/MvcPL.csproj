@@ -143,6 +143,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Helpers\Description.cs" />
     <Compile Include="Infrastructure\Mappers\CommentViewMapper.cs" />
     <Compile Include="Infrastructure\Mappers\EditPostMapper.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
@@ -228,10 +229,10 @@
     <None Include="Views\Home\_GetBlogPosts.cshtml" />
     <None Include="Views\Home\_GetBlogs.cshtml" />
     <None Include="Views\Home\_GetUserBlogs.cshtml" />
+    <None Include="Views\Search\GetResults.cshtml" />
+    <None Include="Views\Search\Search.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Search\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>

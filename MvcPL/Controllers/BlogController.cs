@@ -41,8 +41,6 @@ namespace MvcPL.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var blogs = blogService.Get(model.Title);
-
             var userId = userService.Get(User.Identity.Name).Id;
 
             blogService.Create(new BllBlog
@@ -51,9 +49,7 @@ namespace MvcPL.Controllers
                 UserId = userId
             });
 
-            var thisBlogId = blogService.GetByUser(userId).Last().Id;
-
-            return RedirectToAction("GetBlogPosts", "Home", new { blogId = thisBlogId});
+            return RedirectToAction("IndexUserBlogs", "Home", new { userId });
         }
 
         public ActionResult EditBlog(int id)
@@ -62,10 +58,9 @@ namespace MvcPL.Controllers
             return PartialView();
         }
 
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int blogId)
         {
-            blogService.Delete(id);
+            blogService.Delete(blogId);
             return RedirectToAction("Index", "Home");
         }
 

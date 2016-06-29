@@ -13,6 +13,7 @@ namespace BLL.Services
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IRepository<DalPost> repository;
+        private readonly IRepository<DalTag> tagRepository;
 
         public PostService(IUnitOfWork unitOfWork)
         {
@@ -20,6 +21,7 @@ namespace BLL.Services
 
             this.unitOfWork = unitOfWork;
             this.repository = unitOfWork.GetRepository<DalPost>();
+            this.tagRepository = unitOfWork.GetRepository<DalTag>();
         }
 
         public BllPost Get(int id)
@@ -69,6 +71,11 @@ namespace BLL.Services
         public IEnumerable<BllPost> GetByBlog(int blogId)
         {
             return repository.Get(post => post.BlogId == blogId).Select(x=>x.ToBll());
+        }
+
+        public IEnumerable<BllPost> GetByTags(IEnumerable<BllTag> tags)
+        {
+            return tags.Select(tag => repository.Get(tag.PostId).ToBll()).ToList();
         }
     }
 }

@@ -12,28 +12,34 @@
         <div class="container">
             <div class="blog-nav">
                 @Html.ActionLink("Home", "Index", new { area = "", controller = "Home" },
-               new { @class = "blog-nav-item" })
+                    new { @class = "blog-nav-item" })
                 @if (Request.IsAuthenticated)
                 {
                     if (User.IsInRole("Admin"))
                     {
                         @Html.ActionLink("Admin panel", "Index", new { area = "Admin", controller = "Admin" },
-                       new { @class = "blog-nav-item" })
+                            new { @class = "blog-nav-item" })
                     }
-                    @Html.ActionLink(Context.User.Identity.Name, "EditBlogs", new { area = "", controller = "Blog" },
-                   new { @class = "blog-nav-item" })
+                    <div class="blog-nav-item">@Context.User.Identity.Name</div>
                     @Html.ActionLink("Logoff", "Logoff", new { area = "", controller = "Account" },
-                   new { @class = "blog-nav-item" })
+                        new { @class = "blog-nav-item" })
                 }
                 else
                 {
                     @Html.ActionLink("Login", "Login", new { area = "", controller = "Account" },
-                   new { @class = "blog-nav-item" })
+                        new { @class = "blog-nav-item" })
                     @Html.ActionLink("Register", "Register", new { area = "", controller = "Account" },
-                   new { @class = "blog-nav-item" })
+                        new { @class = "blog-nav-item" })
                 }
-
+                @using (Html.BeginForm("Search", "Search", new {area=""}, FormMethod.Get, new { @class = "navbar-form navbar-right" }))
+                {
+                <div class="form-group">
+                    @Html.TextBox("query", null, new { @class = "form-control" })
+                </div>
+                <button type="submit" class="btn btn-xs btn-success">Search</button>
+                }
             </div>
+            
         </div>
     </div>
 
@@ -48,11 +54,12 @@
         </div>
     </div>
 
-<footer class="blog-footer">
-    <p>&copy; @DateTime.Now.Year - Blog ASP.NET Application</p>
-    <p><a href="#">Back to top</a>
-    </p>
-</footer>
+    <footer class="blog-footer">
+        <p>&copy; @DateTime.Now.Year - Blog ASP.NET Application</p>
+        <p>
+            <a href="#">Back to top</a>
+        </p>
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
