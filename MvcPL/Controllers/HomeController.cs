@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using BLL.Entities;
 using BLL.Interfaces;
+using MvcPL.Infrastructure.Mappers;
 using MvcPL.Models;
 using Ninject;
 
@@ -17,6 +19,8 @@ namespace MvcPL.Controllers
         private readonly IUserService userService;
         private readonly IPostService postService;
         private readonly ITagService tagService;
+        private readonly ICommentService commentService;
+
         private static readonly int itemsToLoad = 3;
         private static readonly int wordsInDescription = 50;
 
@@ -26,6 +30,7 @@ namespace MvcPL.Controllers
             this.userService = kernel.Get<IUserService>();
             this.postService = kernel.Get<IPostService>();
             this.tagService = kernel.Get<ITagService>();
+            this.commentService = kernel.Get<ICommentService>();
         }
 
         public ActionResult Index(int pageNumber = 1)
@@ -64,15 +69,7 @@ namespace MvcPL.Controllers
             if (pageNumber < 1) pageNumber = 1;
             var blog = blogService.Get(blogId);
             var user = userService.Get(blog.UserId);
-            var model = new PostMainModel
-            {
-                BlogId = blogId,
-                UserId = user.Id,
-                PageNumber = pageNumber,
-                BlogTitle = blog.Title,
-                FirstName = user.FirstName,
-                LastName = user.LastName
-            };
+            var model = new PostMainModel(pageNumber, new List<PostModel>(), user, blog);
 
             if (User.Identity.IsAuthenticated)
             {
@@ -87,7 +84,7 @@ namespace MvcPL.Controllers
             var blog = blogService.Get(blogId);
             var user = userService.Get(blog.UserId);
 
-            var allPosts = postService.GetByBlog(blog.Id);
+            var allPosts = postService.GetByBlog(blog.Id).ToList();
             var posts = allPosts.Skip((pageNumber - 1) * itemsToLoad).Take(itemsToLoad);
 
             var mainModels = new List<PostModel>();
@@ -95,23 +92,10 @@ namespace MvcPL.Controllers
             foreach (var post in posts)
             {
                 var tags = tagService.GetByPost(post.Id);
-                mainModels.Add(new PostModel
-                {
-                    PostId = post.Id,
-                    Content = post.Content.Split(' ').Take(50).Aggregate((x, y) => x + " " + y) + "...",
-                    Title = post.Title,
-                    Tags = tags
-                });
+                mainModels.Add(new PostModel(post, tags, wordsInDescription, GetDescription));
             }
 
-            var model = new PostMainModel
-            {
-                BlogId = blog.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                PageNumber = pageNumber,
-                MainModels = mainModels
-            };
+            var model = new PostMainModel(pageNumber, mainModels, user, blog);
 
             ViewBag.HasPrevius = pageNumber > 1;
             ViewBag.HasNext = allPosts.Count() > pageNumber * itemsToLoad;
@@ -126,16 +110,7 @@ namespace MvcPL.Controllers
             var user = userService.Get(blog.UserId);
             var tags = tagService.GetByPost(post.Id);
 
-            var model = new PostViewModel
-            {
-                BlogId = blog.Id,
-                Content = post.Content,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                PostId = post.Id,
-                Title = post.Title,
-                Tags = tags
-            };
+            var model = new PostViewModel(post, tags, blog, user);
 
             if (User.Identity.IsAuthenticated)
             {
@@ -166,6 +141,26 @@ namespace MvcPL.Controllers
             return PartialView("_GetBlogs", model);
         }
 
+        public PartialViewResult GetCommentsByPost(int postId)
+        {
+            var comments = commentService.GetByPost(postId).Reverse();
+            var model = new List<CommentViewModel>();
+            foreach (var comment in comments)
+            {
+                var user = userService.Get(comment.UserId);
+                var com = comment.ToViewModel(user);
+                if (User.Identity.IsAuthenticated)
+                {
+                    com.IsMy = user.Email == User.Identity.Name || IsInRoles();
+                }
+                model.Add(com);
+            }
+
+            return PartialView(model);
+        }
+
+        #region Private methods
+
         private bool IsInRoles()
         {
             return User.IsInRole("Admin");
@@ -173,7 +168,7 @@ namespace MvcPL.Controllers
 
         private BlogMainModel GetBlogMainModel(int pageNumber, IEnumerable<BllBlog> allBlogs)
         {
-            var blogs = allBlogs.Skip((pageNumber - 1) * itemsToLoad).Take(itemsToLoad);
+            var blogs = allBlogs.Skip((pageNumber - 1)*itemsToLoad).Take(itemsToLoad);
 
             var mainModels = new List<MainModel>();
 
@@ -183,23 +178,22 @@ namespace MvcPL.Controllers
                 var post = postService.GetByBlog(blog.Id).LastOrDefault();
                 if (post != null)
                 {
-                    post.Content = post.Content.Split(' ').Take(wordsInDescription).Aggregate((x, y) => x + " " + y) + "...";
-                    mainModels.Add(new MainModel
-                    {
-                        UserId = user.Id,
-                        BlogId = blog.Id,
-                        Title = blog.Title,
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
-                        LastPost = post
-                    });
+                    post.Content = GetDescription(wordsInDescription, post.Content);
+                    mainModels.Add(new MainModel(user, blog, post));
                 }
             }
 
             ViewBag.HasPrevius = pageNumber > 1;
-            ViewBag.HasNext = allBlogs.Count() > pageNumber * itemsToLoad;
+            ViewBag.HasNext = allBlogs.Count() > pageNumber*itemsToLoad;
 
-            return new BlogMainModel { MainModels = mainModels, PageNumber = pageNumber };
+            return new BlogMainModel {MainModels = mainModels, PageNumber = pageNumber};
         }
+
+        private string GetDescription(int wordsInDescription, string str)
+        {
+            return str.Split(' ').Take(wordsInDescription).Aggregate((x, y) => x + " " + y) + "...";
+        }
+
+        #endregion
     }
 }

@@ -6,8 +6,8 @@
 
 <h1 class="blog-title">@Model.BlogTitle</h1>
 <p class="lead blog-description">
-    by @Html.ActionLink(Model.FirstName + " " + Model.LastName, "IndexUserBlogs", "Home", null, 
-      new {userId = Model.UserId, pageNumber = 1})
+    by @Html.ActionLink(Model.FirstName + " " + Model.LastName, "IndexUserBlogs", "Home", 
+      new { userId = Model.UserId, pageNumber = 1 }, null)
 </p>
 
 @if (User.Identity.IsAuthenticated && ViewBag.IsMyBlog)

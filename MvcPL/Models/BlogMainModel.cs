@@ -17,5 +17,19 @@ namespace MvcPL.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public BllPost LastPost { get; set; }
+
+        public MainModel()
+        {
+        }
+
+        public MainModel(BllUser user, BllBlog blog, BllPost lastPost)
+        {
+            UserId = user.Id;
+            BlogId = blog.Id;
+            Title = blog.Title;
+            FirstName = user.FirstName;
+            LastName = user.LastName;
+            LastPost = lastPost;
+        }
     }
 }

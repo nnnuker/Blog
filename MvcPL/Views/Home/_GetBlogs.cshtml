@@ -1,58 +1,72 @@
 ﻿@model MvcPL.Models.BlogMainModel
 
-@foreach (var blog in Model.MainModels)
+@if (!Model.MainModels.Any())
 {
-    <div class="blog-post">
-        <h2 class="blog-post-title">
-            @Html.ActionLink(blog.Title, "PostsIndex", "Home", new { blogId = blog.BlogId, pageNumber = 1 }, null)
-        </h2>
-        <p class="blog-post-meta">
-            by @Html.ActionLink(blog.FirstName + " " + blog.LastName, "IndexUserBlogs", "Home",
-              new { userId = blog.UserId, pageNumber = 1 }, null)
-        </p>
-        <p>
-            @blog.LastPost.Content
-        </p>
-
-        @Html.ActionLink("Read more", "PostsIndex", "Home", new { blogId = blog.BlogId, pageNumber = 1 }, null)
-    </div>
+    <h2 class="blog-post-title">
+        This user did not create any blogs.
+        <br />
+        <br />
+        @Html.ActionLink("Go home", "Index", "Home")
+    </h2>
 }
+else
+{
+    foreach (var blog in Model.MainModels)
+    {
+        <div class="blog-post">
+            <h2 class="blog-post-title">
+                @Html.ActionLink(blog.Title, "PostsIndex", "Home", new { blogId = blog.BlogId, pageNumber = 1 }, null)
+            </h2>
+            <p class="blog-post-meta">
+                by @Html.ActionLink(blog.FirstName + " " + blog.LastName, "IndexUserBlogs", "Home",
+              new { userId = blog.UserId, pageNumber = 1 }, null)
+            </p>
+            <p>
+                @blog.LastPost.Content
+            </p>
 
-<nav>
-    <ul class="pager">
-        <li>
-            @if (ViewBag.HasPrevius)
-            {
-                @Ajax.ActionLink("Previus", (string)ViewBag.ActionLink, new { pageNumber = Model.PageNumber - 1 }, new AjaxOptions
-           {
-               UpdateTargetId = "blogs",
-               LoadingElementId = "loading",
-               LoadingElementDuration = 1000,
-               Url = Url.Action((string)ViewBag.AjaxLink, new { pageNumber = Model.PageNumber - 1 })
-           })
-            }
-            else
-            {
-                <a>Previus</a>
-            }
+            @Html.ActionLink("Read more", "PostsIndex", "Home", new { blogId = blog.BlogId, pageNumber = 1 }, null)
+        </div>
+    }
 
-        </li>
+    <nav>
+        <ul class="pager">
+            <li>
+                @if (ViewBag.HasPrevius)
+                {
+                    @Ajax.ActionLink("Previus", (string)ViewBag.ActionLink, new { pageNumber = Model.PageNumber - 1 },
+                   new AjaxOptions
+                   {
+                       UpdateTargetId = "blogs",
+                       LoadingElementId = "loading",
+                       LoadingElementDuration = 1000,
+                       Url = Url.Action((string)ViewBag.AjaxLink, new { pageNumber = Model.PageNumber - 1 })
+                   })
+                }
+                else
+                {
+                    <a>Previus</a>
+                }
 
-        <li>
-            @if (ViewBag.HasNext)
-            {
-                @Ajax.ActionLink("Next", (string)ViewBag.ActionLink, new { pageNumber = Model.PageNumber + 1 }, new AjaxOptions
-           {
-               UpdateTargetId = "blogs",
-               LoadingElementId = "loading",
-               LoadingElementDuration = 1000,
-               Url = Url.Action((string)ViewBag.AjaxLink, new { pageNumber = Model.PageNumber + 1 })
-           })
-            }
-            else
-            {
-                <a>Next</a>
-            }
-        </li>
-    </ul>
-</nav>
+            </li>
+
+            <li>
+                @if (ViewBag.HasNext)
+                {
+                    @Ajax.ActionLink("Next", (string)ViewBag.ActionLink, new { pageNumber = Model.PageNumber + 1 },
+                   new AjaxOptions
+                   {
+                       UpdateTargetId = "blogs",
+                       LoadingElementId = "loading",
+                       LoadingElementDuration = 1000,
+                       Url = Url.Action((string)ViewBag.AjaxLink, new { pageNumber = Model.PageNumber + 1 })
+                   })
+                }
+                else
+                {
+                    <a>Next</a>
+                }
+            </li>
+        </ul>
+    </nav>
+}

@@ -6,5 +6,6 @@ namespace BLL.Interfaces
     public interface ICommentService:IService<BllComment>
     {
         IEnumerable<BllComment> GetByUser(int userId);
+        IEnumerable<BllComment> GetByPost(int postId);
     }
 }

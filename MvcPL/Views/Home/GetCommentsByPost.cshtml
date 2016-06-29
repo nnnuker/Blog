@@ -1,0 +1,34 @@
+﻿@model IEnumerable<MvcPL.Models.CommentViewModel>
+
+@foreach (var comment in Model)
+{
+    <h1 class="blog-comment-title">
+        @Html.ActionLink(@comment.FirstName + " " + @comment.LastName, "IndexUserBlogs", "Home", 
+       new { userId = comment.UserId, pageNumber = 1 }, null)
+    </h1>
+
+    <div id="@comment.Id" class="blog-comment-post">
+        @if (User.Identity.IsAuthenticated && comment.IsMy)
+        {
+            using (Ajax.BeginForm("DeleteComment", "Blog", new { jsonComment = Json.Encode(comment) }, new AjaxOptions
+            {
+                HttpMethod = "Post",
+                InsertionMode = InsertionMode.Replace,
+                UpdateTargetId = "comments",
+                Url = Url.Action("DeleteComment", "Blog", new { jsonComment = Json.Encode(comment) })
+            }))
+            {
+                @Html.AntiForgeryToken()
+                @Ajax.ActionLink("Edit", "EditComment", "Blog", new { jsonComment = Json.Encode(comment) }, new AjaxOptions
+           {
+               HttpMethod = "Get",
+               InsertionMode = InsertionMode.Replace,
+               UpdateTargetId = comment.Id.ToString(),
+               Url = Url.Action("EditComment", "Blog", new { jsonComment = Json.Encode(comment) })
+           }, new { @class = "btn btn-xs btn-warning" })
+                <button type="submit" class="btn btn-xs btn-danger">Delete</button>
+            }
+        }
+        @comment.Content
+    </div>
+}

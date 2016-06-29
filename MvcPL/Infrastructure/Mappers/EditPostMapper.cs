@@ -37,8 +37,12 @@ namespace MvcPL.Infrastructure.Mappers
 
         public static EditPostModel ToEditPost(this BllPost post, IEnumerable<BllTag> tags)
         {
-            var stringTags = tags.Select(x => x.Name);
-            string tagsConcat = stringTags.Aggregate((current, tag) => current + " " + tag);
+            var stringTags = tags.Select(x => x.Name).ToList();
+            string tagsConcat = "";
+            if (stringTags.Any())
+            {
+                tagsConcat = stringTags.Aggregate((current, tag) => current + " " + tag);
+            }
             return new EditPostModel
             {
                 BlogId = post.BlogId,

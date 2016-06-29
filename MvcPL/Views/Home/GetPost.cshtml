@@ -5,7 +5,8 @@
 }
 
 <h1 class="blog-title">@Model.Title</h1>
-<p class="lead blog-description">by @Model.FirstName @Model.LastName</p>
+<p class="lead blog-description">by @Html.ActionLink(Model.FirstName + " " + Model.LastName, "IndexUserBlogs", "Home",
+       new { userId = Model.UserId, pageNumber = 1 }, null)</p>
 
 @if (User.Identity.IsAuthenticated && ViewBag.IsMyPost)
 {
@@ -24,14 +25,26 @@
     {
         <p>
             Tags: @foreach (var tag in Model.Tags)
-                  {
-                      @Html.ActionLink(tag.Name, "", "", new {id = Model.PostId}, null)
-                  }
+            {
+                @Html.ActionLink(tag.Name, "", "", new { id = Model.PostId }, null)
+            }
         </p>
     }
 </div>
 
-
+<div class="blog-post">
+    <div class="blog"></div>
+    <p>Comments</p>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div id="addComments">
+            @Html.Action("AddComment", "Blog", new { postId = Model.PostId })
+        </div>
+    }
+    <div id="comments">
+        @Html.Action("GetCommentsByPost", new { postId = Model.PostId })
+    </div>
+</div>
 
 
 

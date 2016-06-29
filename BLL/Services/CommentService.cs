@@ -60,5 +60,10 @@ namespace BLL.Services
         {
             return repository.Get(c => c.UserId == userId)?.Select(x => x.ToBll());
         }
+
+        public IEnumerable<BllComment> GetByPost(int postId)
+        {
+            return repository.Get(c => c.PostId == postId)?.Select(x => x.ToBll());
+        }
     }
 }

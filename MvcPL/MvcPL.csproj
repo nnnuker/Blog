@@ -139,15 +139,18 @@
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Mappers\CommentViewMapper.cs" />
     <Compile Include="Infrastructure\Mappers\EditPostMapper.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Infrastructure\Providers\CustomMembershipProvider.cs" />
     <Compile Include="Infrastructure\Providers\CustomRoleProvider.cs" />
     <Compile Include="Models\BlogMainModel.cs" />
     <Compile Include="Models\BlogModel.cs" />
+    <Compile Include="Models\CommentViewModel.cs" />
     <Compile Include="Models\EditPostModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\PostMainModel.cs" />
@@ -167,7 +170,6 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -218,14 +220,18 @@
     <None Include="Views\Blog\CreateBlog.cshtml" />
     <None Include="Views\Blog\EditBlog.cshtml" />
     <Content Include="Views\Blog\EditPost.cshtml" />
+    <None Include="Views\Blog\EditComment.cshtml" />
     <None Include="Views\Error\Index.cshtml" />
+    <None Include="Views\Home\GetCommentsByPost.cshtml" />
     <None Include="Views\Home\GetPost.cshtml" />
     <None Include="Views\Home\PostsIndex.cshtml" />
     <None Include="Views\Home\_GetBlogPosts.cshtml" />
     <None Include="Views\Home\_GetBlogs.cshtml" />
     <None Include="Views\Home\_GetUserBlogs.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\Search\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
