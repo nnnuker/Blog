@@ -3,13 +3,13 @@
 
 @Html.LoadingElement("loading", "Loading...", "load")
 
-@using (Ajax.BeginForm("EditComment", "Blog", FormMethod.Post, new AjaxOptions
+@using (Ajax.BeginForm("EditComment", "Comment", FormMethod.Post, new AjaxOptions
 {
     UpdateTargetId = "comments",
     HttpMethod = "Post",
     InsertionMode = InsertionMode.Replace,
     LoadingElementId = "loading",
-    Url = Url.Action("EditComment", "Blog")
+    Url = Url.Action("EditComment", "Comment")
 }))
 {
     @Html.AntiForgeryToken()

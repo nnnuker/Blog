@@ -10,21 +10,21 @@
     <div id="@comment.Id" class="blog-comment-post">
         @if (User.Identity.IsAuthenticated && comment.IsMy)
         {
-            using (Ajax.BeginForm("DeleteComment", "Blog", new { jsonComment = Json.Encode(comment) }, new AjaxOptions
+            using (Ajax.BeginForm("DeleteComment", "Comment", new { jsonComment = Json.Encode(comment) }, new AjaxOptions
             {
                 HttpMethod = "Post",
                 InsertionMode = InsertionMode.Replace,
                 UpdateTargetId = "comments",
-                Url = Url.Action("DeleteComment", "Blog", new { jsonComment = Json.Encode(comment) })
+                Url = Url.Action("DeleteComment", "Comment", new { jsonComment = Json.Encode(comment) })
             }))
             {
                 @Html.AntiForgeryToken()
-                @Ajax.ActionLink("Edit", "EditComment", "Blog", new { jsonComment = Json.Encode(comment) }, new AjaxOptions
+                @Ajax.ActionLink("Edit", "EditComment", "Comment", new { jsonComment = Json.Encode(comment) }, new AjaxOptions
            {
                HttpMethod = "Get",
                InsertionMode = InsertionMode.Replace,
                UpdateTargetId = comment.Id.ToString(),
-               Url = Url.Action("EditComment", "Blog", new { jsonComment = Json.Encode(comment) })
+               Url = Url.Action("EditComment", "Comment", new { jsonComment = Json.Encode(comment) })
            }, new { @class = "btn btn-xs btn-warning" })
                 <button type="submit" class="btn btn-xs btn-danger">Delete</button>
             }

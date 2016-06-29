@@ -13,6 +13,12 @@
                 <th>@Html.DisplayNameFor(model => model.Title)</th>
                 <th></th>
             </tr>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td>You did not have any blogs.</td>
+                </tr>
+            }
             @foreach (var blog in Model)
             {
                 <tr>

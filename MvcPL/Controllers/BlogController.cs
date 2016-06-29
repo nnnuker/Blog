@@ -19,7 +19,6 @@ namespace MvcPL.Controllers
         private readonly IUserService userService;
         private readonly IPostService postService;
         private readonly ITagService tagService;
-        private readonly ICommentService commentService;
 
         public BlogController(IKernel kernel)
         {
@@ -27,7 +26,6 @@ namespace MvcPL.Controllers
             this.userService = kernel.Get<IUserService>();
             this.postService = kernel.Get<IPostService>();
             this.tagService = kernel.Get<ITagService>();
-            this.commentService = kernel.Get<ICommentService>();
         }
 
         public ActionResult CreateBlog()
@@ -110,65 +108,6 @@ namespace MvcPL.Controllers
             return RedirectToAction("GetPost", "Home", new { postId = post.Id});
         }
 
-        public ActionResult DeleteComment(string jsonComment)
-        {
-            var comment = System.Web.Helpers.Json.Decode<CommentViewModel>(jsonComment);
-            commentService.Delete(comment.Id);
-
-            if (Request.IsAjaxRequest())
-            {
-                return RedirectToAction("GetCommentsByPost", "Home", new {postId = comment.PostId});
-            }
-
-            return RedirectToAction("GetPost", "Home", new {postId = comment.PostId});
-        }
-
-        public ActionResult EditComment(string jsonComment)
-        {
-            var model = System.Web.Helpers.Json.Decode<CommentViewModel>(jsonComment);
-
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView(model);
-            }
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditComment(CommentViewModel comment)
-        {
-            if (comment.Id == 0)
-            {
-                commentService.Create(comment.ToBllComment());
-            }
-            else
-            {
-                commentService.Update(comment.ToBllComment());
-            }
-
-            if (Request.IsAjaxRequest())
-            {
-                return RedirectToAction("GetCommentsByPost", "Home", new { postId = comment.PostId });
-            }
-
-            return RedirectToAction("GetPost", "Home", new { postId = comment.PostId });
-        }
-
-        public PartialViewResult AddComment(int postId)
-        {
-            var currentUser = userService.Get(User.Identity.Name);
-            var model = new CommentViewModel
-            {
-                PostId = postId,
-                Content = "",
-                FirstName = currentUser.FirstName,
-                LastName = currentUser.LastName,
-                IsMy = true,
-                UserId = currentUser.Id
-            };
-            return PartialView("EditComment", model);
-        }
+        
     }
 }

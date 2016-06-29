@@ -142,24 +142,6 @@ namespace MvcPL.Controllers
             return PartialView("_GetBlogs", model);
         }
 
-        public PartialViewResult GetCommentsByPost(int postId)
-        {
-            var comments = commentService.GetByPost(postId).Reverse();
-            var model = new List<CommentViewModel>();
-            foreach (var comment in comments)
-            {
-                var user = userService.Get(comment.UserId);
-                var com = comment.ToViewModel(user);
-                if (User.Identity.IsAuthenticated)
-                {
-                    com.IsMy = user.Email == User.Identity.Name || IsInRoles();
-                }
-                model.Add(com);
-            }
-
-            return PartialView(model);
-        }
-
         #region Private methods
 
         private bool IsInRoles()

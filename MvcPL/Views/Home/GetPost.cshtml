@@ -38,11 +38,11 @@
     @if (User.Identity.IsAuthenticated)
     {
         <div id="addComments">
-            @Html.Action("AddComment", "Blog", new { postId = Model.PostId })
+            @Html.Action("AddComment", "Comment", new { postId = Model.PostId })
         </div>
     }
     <div id="comments">
-        @Html.Action("GetCommentsByPost", new { postId = Model.PostId })
+        @Html.Action("GetCommentsByPost", "Comment", new { postId = Model.PostId })
     </div>
 </div>
 
