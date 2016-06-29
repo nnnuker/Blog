@@ -31,6 +31,7 @@ namespace DAL.Mappers
             Expression<Func<TEntity, TProperty>> sourceProperty)
         {
             if (sourceProperty == null) throw new ArgumentNullException(nameof(sourceProperty));
+
             mapDictionary.Add(GetPropertyInfo(targetProperty), GetPropertyInfo(sourceProperty));
 
             return this;

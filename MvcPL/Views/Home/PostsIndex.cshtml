@@ -1,4 +1,5 @@
-﻿@model MvcPL.Models.PostMainModel
+﻿@using MvcPL.Infrastructure.Helpers
+@model MvcPL.Models.PostMainModel
 
 @{
     ViewBag.Title = Model.BlogTitle;
@@ -17,9 +18,7 @@
     </div>
 }
 
-<div id="loading" class="load" style="display: none">
-    <p>Loading...</p>
-</div>
+@Html.LoadingElement("loading", "Loading...", "load")
 <div id="blogs">
     @Html.Action("GetBlogPosts", new { blogId = Model.BlogId, pageNumber = Model.PageNumber })
 </div>

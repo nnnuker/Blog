@@ -1,12 +1,11 @@
-﻿@model object
+﻿@using MvcPL.Infrastructure.Helpers
+@model object
 
 @{
     ViewBag.Title = "Home";
 }
 
-<div id="loading" class="load" style="display: none">
-    <p>Loading...</p>
-</div>
+@Html.LoadingElement("loading", "Loading...", "load")
 <div id="blogs">
     @Html.Action((string)ViewBag.Action, Model)
 </div>

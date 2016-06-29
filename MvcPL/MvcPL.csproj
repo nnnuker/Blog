@@ -144,6 +144,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Helpers\Description.cs" />
+    <Compile Include="Infrastructure\Helpers\LoadingHtmlHelper.cs" />
     <Compile Include="Infrastructure\Mappers\CommentViewMapper.cs" />
     <Compile Include="Infrastructure\Mappers\EditPostMapper.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />

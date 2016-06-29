@@ -1,12 +1,11 @@
 ﻿@using MvcPL.Areas.Admin.Models
+@using MvcPL.Infrastructure.Helpers
 @model IEnumerable<MvcPL.Areas.Admin.Models.UserModel>
 
 @{
     ViewBag.Title = "Users";
 }
-<div id="loading" class="load" style="display: none">
-    <p>Loading...</p>
-</div>
+@Html.LoadingElement("loading", "Loading...", "load")
 <div id="blogs">
     <div class="panel panel-primary">
         <div class="panel-heading">

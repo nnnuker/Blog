@@ -1,8 +1,7 @@
-﻿@model MvcPL.Models.CommentViewModel
+﻿@using MvcPL.Infrastructure.Helpers
+@model MvcPL.Models.CommentViewModel
 
-<div id="loading" class="load" style="display: none">
-    <p>Loading...</p>
-</div>
+@Html.LoadingElement("loading", "Loading...", "load")
 
 @using (Ajax.BeginForm("EditComment", "Blog", FormMethod.Post, new AjaxOptions
 {

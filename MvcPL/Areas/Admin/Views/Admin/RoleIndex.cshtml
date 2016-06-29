@@ -1,9 +1,11 @@
-﻿@model System.Collections.Generic.IEnumerable<BLL.Entities.BllRole>
+﻿@using MvcPL.Infrastructure.Helpers
+@model System.Collections.Generic.IEnumerable<BLL.Entities.BllRole>
 
 @{
     ViewBag.Title = "Roles";
 }
 
+@Html.LoadingElement("loading", "Loading...", "load")
 <div id="blogs">
     <div class="panel panel-primary">
         <div class="panel-heading">
